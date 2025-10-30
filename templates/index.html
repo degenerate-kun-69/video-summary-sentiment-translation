@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Transcribe Video{% endblock %}
+{% block content %}
+<section class="card">
+    <h2>Transcribe a video</h2>
+    <p>Select a video file from the library and let the app extract audio and transcribe the speech.</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="post" action="{{ url_for('main.index') }}">
+        <div class="actions">
+            <label for="video_name">Video</label>
+            <select id="video_name" name="video_name" required>
+                <option value="" disabled selected>Choose a video…</option>
+                {% for video in videos %}
+                    <option value="{{ video }}">{{ video }}</option>
+                {% else %}
+                    <option value="" disabled>No videos available</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Extract &amp; Transcribe</button>
+        </div>
+    </form>
+
+    {% if audio_filename %}
+        <section>
+            <h3>Latest output</h3>
+            <p class="meta">Stored audio file: <code>{{ audio_filename }}</code></p>
+        </section>
+    {% endif %}
+
+    {% if transcript %}
+        <section>
+            <h3>Transcript</h3>
+            <div class="transcript">{{ transcript }}</div>
+        </section>
+    {% endif %}
+</section>
+{% endblock %}
